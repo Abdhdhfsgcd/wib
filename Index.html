@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع رفع الفيديوهات التعليمية</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #0056b3;
+            margin-bottom: 20px;
+            text-align: right;
+            /* تحويل العنوان لليمين */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-size: 16px;
+            text-align: right;
+            /* تحويل النصوص لليمين */
+            color: #0056b3;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #00449e;
+        }
+
+        #video-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .video-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 2px solid #0056b3;
+        }
+
+        .thumbnail {
+            width: 100%;
+            max-width: 300px;
+            height: 170px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .views {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #777;
+            text-align: right;
+            /* تحويل النصوص لليمين */
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .like-btn,
+        .comment-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .like-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .comment-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .like-btn:hover {
+            background-color: #218838;
+        }
+
+        .comment-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            text-align: right;
+            /* تحويل قسم التعليقات لليمين */
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            text-align: right;
+            /* تحويل التعليقات لليمين */
+        }
+
+        .comment-input {
+            width: 80%;
+            margin-right: 10px;
+            text-align: right;
+            /* تحويل إدخال التعليقات لليمين */
+        }
+
+        /* تحريك المشاهدات */
+        .views {
+            animation: fadeIn 1s ease;
+        }
+
+        /* تحريك الفيديو */
+        .video-item:hover video {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>رفع مقاطع الفيديو التعليمية</h1>
+
+        <!-- نموذج رفع الفيديو -->
+        <form id="upload-form">
+            <label for="video-file">اختر فيديو:</label>
+            <input type="file" id="video-file" accept="video/*" required>
+            <label for="thumbnail-file">اختر صورة مصغرة:</label>
+            <input type="file" id="thumbnail-file" accept="image/*" required>
+            <button type="submit">رفع الفيديو</button>
+        </form>
+
+        <div id="video-list"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const videoList = document.getElementById('video-list');
+
+        // تحميل الفيديوهات المحفوظة من LocalStorage
+        window.onload = function () {
+            loadSavedVideos();
+        };
+
+        // حفظ الفيديوهات في LocalStorage
+        function saveVideo(videoData) {
+            let videos = JSON.parse(localStorage.getItem('videos')) || [];
+            videos.push(videoData);
+            localStorage.setItem('videos', JSON.stringify(videos));
+        }
+
+        // تحميل الفيديوهات من LocalStorage
+        function loadSavedVideos() {
+            const videos = JSON.parse(localStorage.getItem('videos')) || [];
+            videos.forEach(video => {
+                displayVideo(video.videoUrl, video.thumbnailUrl);
+            });
+        }
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const videoFile = document.getElementById('video-file').files[0];
+            const thumbnailFile = document.getElementById('thumbnail-file').files[0];
+
+            if (videoFile && thumbnailFile) {
+                const videoUrl = URL.createObjectURL(videoFile);
+                const thumbnailUrl = URL.createObjectURL(thumbnailFile);
+
+                // حفظ بيانات الفيديو في LocalStorage
+                saveVideo({ videoUrl, thumbnailUrl });
+
+                // عرض الفيديو بعد رفعه
+                displayVideo(videoUrl, thumbnailUrl);
+            }
+        });
+
+        function displayVideo(videoUrl, thumbnailUrl) {
+            const videoElement = document.createElement('div');
+            videoElement.classList.add('video-item');
+
+            // إنشاء صورة مصغرة
+            const thumbnailImg = document.createElement('img');
+            thumbnailImg.src = thumbnailUrl;
+            thumbnailImg.classList.add('thumbnail');
+            videoElement.appendChild(thumbnailImg);
+
+            // إنشاء عنصر الفيديو
+            const videoTag = document.createElement('video');
+            videoTag.src = videoUrl;
+            videoTag.controls = true;
+            videoElement.appendChild(videoTag);
+
+            // عدد المشاهدات
+            let viewsCount = 0;
+            const viewsDiv = document.createElement('div');
+            viewsDiv.classList.add('views');
+            viewsDiv.innerText = `عدد المشاهدات: ${viewsCount}`;
+            videoElement.appendChild(viewsDiv);
+
+            // إضافة حدث لزيادة عدد المشاهدات عند بدء تشغيل الفيديو
+            videoTag.addEventListener('play', function () {
+                viewsCount++;
+                viewsDiv.innerText = `عدد المشاهدات: ${viewsCount}`;
+            });
+
+            // إنشاء أزرار الإعجاب والتعليق
+            const controlsDiv = document.createElement('div');
+            controlsDiv.classList.add('controls');
+
+            const likeButton = document.createElement('button');
+            likeButton.classList.add('like-btn');
+            likeButton.innerText = 'إعجاب';
+
+            const commentButton = document.createElement('button');
+            commentButton.classList.add('comment-btn');
+            commentButton.innerText = 'تعليق';
+
+            controlsDiv.appendChild(likeButton);
+            controlsDiv.appendChild(commentButton);
+            videoElement.appendChild(controlsDiv);
+
+            // إضافة قسم التعليقات
+            const commentsSection = document.createElement('div');
+            commentsSection.classList.add('comments-section');
+            commentsSection.innerHTML = '<h4>التعليقات:</h4>';
+
+            const commentInput = document.createElement('input');
+            commentInput.classList.add('comment-input');
+            commentInput.setAttribute('placeholder', 'أضف تعليقك...');
+            commentsSection.appendChild(commentInput);
+
+            const commentButtonAdd = document.createElement('button');
+            commentButtonAdd.classList.add('comment-btn');
+            commentButtonAdd.innerText = 'إضافة تعليق';
+            commentsSection.appendChild(commentButtonAdd);
+
+            videoElement.appendChild(commentsSection);
+
+            commentButtonAdd.addEventListener('click', function () {
+                const commentText = commentInput.value;
+                if (commentText.trim()) {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.classList.add('comment');
+                    commentDiv.innerText = commentText;
+                    commentsSection.appendChild(commentDiv);
+                    commentInput.value = '';
+                }
+            });
+
+            videoList.appendChild(videoElement);
+        }
+        deleteButton.addEventListener('click', function () {
+                // حذف الفيديو من الصفحة
+                videoElement.remove();
+
+                // حذف الفيديو من LocalStorage
+                let videos = JSON.parse(localStorage.getItem('videos')) || [];
+                videos = videos.filter(video => video.videoUrl !== videoUrl);
+                localStorage.setItem('videos', JSON.stringify(videos));
+            });
+
+            function displayVideo(videoUrl, thumbnailUrl) {
+                    const videoElement = document.createElement('div');
+                    videoElement.classList.add('video-item');
+
+                    // إنشاء صورة مصغرة
+                    const thumbnailImg = document.createElement('img');
+                    thumbnailImg.src = thumbnailUrl;
+                    thumbnailImg.classList.add('thumbnail');
+                    videoElement.appendChild(thumbnailImg);
+
+                    // إنشاء عنصر الفيديو
+                    const videoTag = document.createElement('video');
+                    videoTag.src = videoUrl;
+                    videoTag.controls = true;
+                    videoElement.appendChild(videoTag);
+
+                    // عدد المشاهدات
+                    let viewsCount = 0;
+                    const viewsDiv = document.createElement('div');
+                    viewsDiv.classList.add('views');
+                    viewsDiv.innerText = `عدد المشاهدات: ${viewsCount}`;
+                    videoElement.appendChild(viewsDiv);
+
+                    // إضافة حدث لزيادة عدد المشاهدات عند بدء تشغيل الفيديو
+                    videoTag.addEventListener('play', function () {
+                        viewsCount++;
+                        viewsDiv.innerText = `عدد المشاهدات: ${viewsCount}`;
+                    });
+
+                    // إنشاء أزرار الإعجاب والتعليق
+                    const controlsDiv = document.createElement('div');
+                    controlsDiv.classList.add('controls');
+
+                    const likeButton = document.createElement('button');
+                    likeButton.classList.add('like-btn');
+                    likeButton.innerText = 'إعجاب';
+
+                    const commentButton = document.createElement('button');
+                    commentButton.classList.add('comment-btn');
+                    commentButton.innerText = 'تعليق';
+
+                    controlsDiv.appendChild(likeButton);
+                    controlsDiv.appendChild(commentButton);
+                    videoElement.appendChild(controlsDiv);
+
+                    // إنشاء زر الحذف
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('delete-btn');
+                    deleteButton.innerText = 'حذف';
+                    controlsDiv.appendChild(deleteButton);
+
+                    // إضافة حدث حذف الفيديو
+                    deleteButton.addEventListener('click', function () {
+                        // حذف الفيديو من الصفحة
+                        videoElement.remove();
+
+                        // حذف الفيديو من LocalStorage
+                        let videos = JSON.parse(localStorage.getItem('videos')) || [];
+                        videos = videos.filter(video => video.videoUrl !== videoUrl);
+                        localStorage.setItem('videos', JSON.stringify(videos));
+                    });
+
+                    // إضافة قسم التعليقات
+                    const commentsSection = document.createElement('div');
+                    commentsSection.classList.add('comments-section');
+                    commentsSection.innerHTML = '<h4>التعليقات:</h4>';
+
+                    const commentInput = document.createElement('input');
+                    commentInput.classList.add('comment-input');
+                    commentInput.setAttribute('placeholder', 'أضف تعليقك...');
+                    commentsSection.appendChild(commentInput);
+
+                    const commentButtonAdd = document.createElement('button');
+                    commentButtonAdd.classList.add('comment-btn');
+                    commentButtonAdd.innerText = 'إضافة تعليق';
+                    commentsSection.appendChild(commentButtonAdd);
+
+                    videoElement.appendChild(commentsSection);
+
+                    commentButtonAdd.addEventListener('click', function () {
+                        const commentText = commentInput.value;
+                        if (commentText.trim()) {
+                            const commentDiv = document.createElement('div');
+                            commentDiv.classList.add('comment');
+                            commentDiv.innerText = commentText;
+                            commentsSection.appendChild(commentDiv);
+                            commentInput.value = '';
+                        }
+                    });
+
+                    videoList.appendChild(videoElement);
+                }
+ 
+                // مثال لتحديد المستخدم الذي يملك صلاحيات الحذف (قد يكون admin أو صاحب الفيديو)
+                    const isAdmin = true; // إذا كان المستخدم مشرفًا
+                    const isVideoOwner = true; // إذا كان المستخدم هو مالك الفيديو
+
+                    // إظهار زر الحذف فقط إذا كان المستخدم مشرفًا أو مالك الفيديو
+                        if (isAdmin || isVideoOwner) {
+                            const deleteButton = document.createElement('button');
+                            deleteButton.classList.add('delete-btn');
+                            deleteButton.innerText = 'حذف';
+                            controlsDiv.appendChild(deleteButton);
+
+                            // إضافة حدث حذف الفيديو
+                            deleteButton.addEventListener('click', function () {
+                                // حذف الفيديو من الصفحة
+                                videoElement.remove();
+
+                                // حذف الفيديو من LocalStorage
+                                let videos = JSON.parse(localStorage.getItem('videos')) || [];
+                                videos = videos.filter(video => video.videoUrl !== videoUrl);
+                                localStorage.setItem('videos', JSON.stringify(videos));
+                            });
+                        }
+
+    </script>
+</body>
+
+</html>
