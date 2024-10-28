@@ -1,0 +1,300 @@
+/* التنسيق العام */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    direction: rtl; /* لضبط اتجاه الكتابة من اليمين إلى اليسار */
+    text-align: right; /* لمحاذاة النص إلى اليمين */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    flex-wrap: wrap; /* جعل المكونات تلتف في حال كان العرض أصغر */
+}
+
+/* شريط التنقل */
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* لضمان الالتفاف عند الأحجام الصغيرة */
+}
+
+nav .logo {
+    font-size: 24px;
+    text-align: right;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    flex-wrap: wrap; /* التكيف مع المساحات الصغيرة */
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    text-align: right; /* محاذاة النص داخل الروابط */
+}
+
+.search-form input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.search-form button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+/* العنوان الرئيسي */
+header {
+    background-color: #5a5a5a;
+    color: white;
+    text-align: right; /* محاذاة النص إلى اليمين */
+    padding: 50px 0;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header p {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+/* مقالات المدونة */
+.blog-posts {
+    width: 70%;
+}
+
+.blog-posts article {
+    background-color: white;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right; /* محاذاة النص إلى اليمين في المقالات */
+}
+
+.blog-posts article h2 {
+    margin-top: 0;
+}
+
+.blog-posts article img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.blog-posts article a {
+    color: #007bff;
+    text-decoration: none;
+    text-align: right; /* محاذاة النص داخل الروابط */
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right; /* محاذاة النص إلى اليمين في الشريط الجانبي */
+}
+
+.sidebar h3 {
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    text-align: right; /* محاذاة النص داخل الروابط */
+}
+
+/* قسم التعليقات */
+.comments {
+    margin: 40px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right; /* محاذاة النص في قسم التعليقات */
+}
+
+.comments h3 {
+    margin-top: 0;
+}
+
+.comments form {
+    display: flex;
+    flex-direction: column;
+}
+
+.comments textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* تذييل الصفحة */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    text-align: right; /* محاذاة النص إلى اليمين في التذييل */
+}
+
+footer .sitemap ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer .sitemap ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+footer .sitemap ul li a {
+    color: white;
+    text-decoration: none;
+    text-align: right; /* محاذاة النص داخل الروابط */
+}
+
+/* الاستجابة لحجم الشاشات */
+/* الهواتف المحمولة */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* الترتيب عموديًا على الشاشات الصغيرة */
+    }
+
+    .blog-posts, .sidebar {
+        width: 100%; /* جعل العناصر تأخذ العرض الكامل */
+        margin: 0; /* إزالة الهوامش الجانبية */
+    }
+
+    .search-form input {
+        width: 100%;
+        margin-bottom: 10px; /* تنسيق مناسب للأجهزة الصغيرة */
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center; /* جعل القائمة في الوسط على الشاشات الصغيرة */
+    }
+
+    nav ul li {
+        margin-left: 0; /* إزالة الهوامش على الشاشات الصغيرة */
+        margin-bottom: 10px; /* إضافة مسافة بين العناصر */
+    }
+
+    nav .logo {
+        text-align: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* الأجهزة اللوحية */
+@media (max-width: 1024px) {
+    .blog-posts {
+        width: 100%; /* جعل مقالات المدونة تأخذ العرض الكامل */
+    }
+
+    .sidebar {
+        width: 100%; /* جعل الشريط الجانبي يظهر أسفل المدونة */
+        margin: 20px 0; /* إضافة مسافة بين المدونة والشريط الجانبي */
+    }
+}
+/* شريط التنقل */
+nav {
+    background-color: #004d40; /* لون داكن للشريط العلوي */
+}
+
+nav ul li a {
+    color: #ffffff; /* النص باللون الأبيض */
+}
+
+nav ul li a:hover {
+    color: #80cbc4; /* تغيير اللون عند التمرير */
+}
+
+/* العنوان الرئيسي */
+header {
+    background-color: #00695c; /* خلفية داكنة للهيدر */
+    color: #ffffff; /* النص باللون الأبيض */
+}
+
+header h1 {
+    color: #e0f7fa; /* عنوان فرعي بلون فاتح */
+}
+
+/* مقالات المدونة */
+.blog-posts article {
+    background-color: #ffffff; /* خلفية بيضاء للمقالات */
+    border-left: 5px solid #004d40; /* شريط عمودي ملون للمقالات */
+}
+
+.blog-posts article a {
+    color: #004d40; /* روابط بلون الشريط العلوي */
+}
+
+.blog-posts article a:hover {
+    color: #00796b; /* تغيير لون الروابط عند التمرير */
+}
+
+/* الشريط الجانبي */
+.sidebar {
+    background-color: #e0f2f1; /* لون خلفية فاتح للشريط الجانبي */
+}
+
+.sidebar ul li a {
+    color: #004d40; /* روابط الشريط الجانبي */
+}
+
+.sidebar ul li a:hover {
+    color: #00796b; /* تغيير لون الروابط عند التمرير */
+}
+
+/* قسم التعليقات */
+.comments {
+    background-color: #f1f8e9; /* خلفية فاتحة لقسم التعليقات */
+}
+
+/* تذييل الصفحة */
+footer {
+    background-color: #004d40; /* خلفية داكنة للتذييل */
+    color: #ffffff; /* النص باللون الأبيض */
+}
+
+footer .sitemap ul li a {
+    color: #ffffff; /* روابط بيضاء في التذييل */
+}
+
+footer .sitemap ul li a:hover {
+    color: #80cbc4; /* تغيير لون الروابط عند التمرير */
+}

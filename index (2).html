@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدونتي</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- شريط التنقل -->
+    <nav>
+        <div class="logo">مدونتي</div>
+        <ul>
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">مقالات</a></li>
+            <li><a href="#">حول</a></li>
+            <li><a href="#">اتصل بنا</a></li>
+        </ul>
+        <form action="search.php" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="ابحث هنا">
+            <button type="submit">بحث</button>
+        </form>
+    </nav>
+
+    <!-- العنوان الرئيسي للمدونة -->
+    <header>
+        <h1>مرحباً بكم في مدونتي!</h1>
+        <p>هنا تجدون أحدث المقالات والمستجدات</p>
+    </header>
+
+    <div class="container">
+        <!-- مقالات المدونة -->
+        <section class="blog-posts">
+            <article>
+                <h2>عنوان المقال الأول</h2>
+                <img src="image1.jpg" alt="صورة المقال الأول">
+                <p>هذا هو نص المقال الأول. يمكنك هنا كتابة محتوى المقال بشكل مختصر.</p>
+                <a href="#">اقرأ المزيد</a>
+            </article>
+
+            <article>
+                <h2>عنوان المقال الثاني</h2>
+                <img src="image2.jpg" alt="صورة المقال الثاني">
+                <p>هذا هو نص المقال الثاني. يمكنك هنا كتابة محتوى المقال بشكل مختصر.</p>
+                <a href="#">اقرأ المزيد</a>
+            </article>
+
+            <article>
+                <h2>عنوان المقال الثالث</h2>
+                <img src="image3.jpg" alt="صورة المقال الثالث">
+                <p>هذا هو نص المقال الثالث. يمكنك هنا كتابة محتوى المقال بشكل مختصر.</p>
+                <a href="#">اقرأ المزيد</a>
+            </article>
+        </section>
+
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <h3>عن الكاتب</h3>
+            <p>نص صغير يوضح من أنت وماذا تقدم.</p>
+
+            <h3>المقالات الشائعة</h3>
+            <ul>
+                <li><a href="#">عنوان المقال الشائع الأول</a></li>
+                <li><a href="#">عنوان المقال الشائع الثاني</a></li>
+                <li><a href="#">عنوان المقال الشائع الثالث</a></li>
+            </ul>
+
+            <h3>تابعنا على وسائل التواصل الاجتماعي</h3>
+            <ul>
+                <li><a href="#">فيسبوك</a></li>
+                <li><a href="#">تويتر</a></li>
+                <li><a href="#">انستغرام</a></li>
+            </ul>
+
+            <h3>اشترك في النشرة البريدية</h3>
+            <form action="subscribe.php" method="POST">
+                <input type="email" id="email" name="email" required placeholder="أدخل بريدك الإلكتروني">
+                <button type="submit">اشترك</button>
+            </form>
+        </aside>
+    </div>
+
+    <!-- قسم التعليقات -->
+    <section class="comments">
+        <h3>اترك تعليقاً:</h3>
+        <form action="comment.php" method="POST">
+            <textarea name="comment" placeholder="اكتب تعليقك هنا" required></textarea>
+            <button type="submit">إرسال</button>
+        </form>
+    </section>
+
+    <!-- إضافة مقال جديد -->
+    <section>
+        <h3>إضافة مقال جديد</h3>
+        <form action="insert_post.php" method="POST">
+            <label for="title">عنوان المقال:</label><br>
+            <input type="text" id="title" name="title" required><br><br>
+
+            <label for="content">محتوى المقال:</label><br>
+            <textarea id="content" name="content" required></textarea><br><br>
+
+            <button type="submit">إضافة المقال</button>
+        </form>
+    </section>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>&copy; 2024 مدونتي. جميع الحقوق محفوظة.</p>
+        <section class="sitemap">
+            <h3>خريطة الموقع</h3>
+            <ul>
+                <li><a href="#">الرئيسية</a></li>
+                <li><a href="#">مقالات</a></li>
+                <li><a href="#">اتصل بنا</a></li>
+                <li><a href="view_posts.php">جميع المقالات</a></li>
+            </ul>
+        </section>
+    </footer>
+    <script>
+    // الحصول على الزر وعناصر الصفحة
+    const toggleButton = document.createElement('button');
+    toggleButton.innerText = 'تبديل الوضع الليلي/النهاري';
+    toggleButton.style.position = 'fixed';
+    toggleButton.style.top = '10px';
+    toggleButton.style.left = '10px';
+    toggleButton.style.padding = '10px';
+    toggleButton.style.backgroundColor = '#007bff';
+    toggleButton.style.color = '#fff';
+    toggleButton.style.border = 'none';
+    toggleButton.style.cursor = 'pointer';
+    document.body.appendChild(toggleButton);
+
+    // تغيير الوضع بين الوضع الليلي والنهاري
+    let isNightMode = false;
+
+    toggleButton.addEventListener('click', function() {
+        if (!isNightMode) {
+            document.body.style.backgroundColor = '#121212'; // خلفية داكنة
+            document.body.style.color = '#ffffff'; // لون النص في الوضع الليلي
+            toggleButton.style.backgroundColor = '#f1c40f'; // تغيير لون الزر
+            toggleButton.style.color = '#121212'; // لون النص في الزر
+            isNightMode = true;
+        } else {
+            document.body.style.backgroundColor = '#ffffff'; // خلفية فاتحة
+            document.body.style.color = '#333'; // لون النص في الوضع النهاري
+            toggleButton.style.backgroundColor = '#007bff'; // لون الزر
+            toggleButton.style.color = '#ffffff'; // لون النص في الزر
+            isNightMode = false;
+        }
+    });
+
+    // إضافة تأثير سلس عند تغيير الخلفية والنص
+    document.body.style.transition = 'background-color 0.5s, color 0.5s';
+    toggleButton.style.transition = 'background-color 0.5s, color 0.5s';
+</script>
+
+</body>
+</html>
